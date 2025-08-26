@@ -17,3 +17,9 @@
   font-weight: 700;
   font-style: normal;
 }
+div[class="cell cell-7"] {
+  backdrop-filter: blur(5px);
+}
+div[class="cell cell-7 weekend-day"] {
+  backdrop-filter: blur(5px);
+}

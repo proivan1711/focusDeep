@@ -1,6 +1,7 @@
 "use strict";
 
 import { nanoid } from "./node_modules/nanoid/nanoid.js";
+import createCalendar from "./calendar.js";
 
 const navBar = document.getElementById("nav");
 const time = document.getElementById("time");
@@ -57,15 +58,19 @@ class App {
       }
       e.target.classList.add("border-b-2");
       if (durations[e.target.id]) {
-        mainClock.classList.remove("hidden")
-        playBtns.classList.remove("hidden")
+        calendarEl.classList.add("hidden")
+        mainClock.classList.remove("hidden");
+        playBtns.classList.remove("hidden");
         this.#state = e.target.id === "menu-pomodoro" ? "pomodoro" : "break";
         this.#timeLeft = durations[e.target.id];
         this.resetPomodoro();
       } else {
+        calendarEl.classList.remove("hidden")
+        document.title = "Calendar";
         mainClock.classList.add("hidden");
         playBtns.classList.add("hidden");
-        timeRemaining.textContent = "Calendar  will go here...";
+        createCalendar(calendarEl, this.getTasks());
+        // timeRemaining.textContent = "Calendar  will go here...";
       }
     });
     playBtns.addEventListener("click", e => {

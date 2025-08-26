@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "@fullcalendar/core": "^6.1.19",
-    "@fullcalendar/daygrid": "^6.1.19",
     "@tailwindcss/cli": "^4.1.12",
+    "@tailwindcss/postcss": "^4.1.12",
+    "jcalendar.js": "^2.12.2",
     "modern-normalize": "^3.0.1",
     "nanoid": "^5.1.5",
     "parcel": "^2.15.4",

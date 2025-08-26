@@ -1,5 +1,7 @@
-node_modules
+node_modules/**
+!node_modules/jcalendar.js/dist/calendar.js.css
 .parcel-cache
 dist
 script.old.js
 .prettierrc
+styles.old.css

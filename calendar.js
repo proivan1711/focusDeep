@@ -1,18 +1,25 @@
-// "use strict";
+"use strict";
 
-// import { Calendar } from "@fullcalendar/core";
-// import dayGridPlugin from "@fullcalendar/daygrid";
-
-// export function makeCalendar(calendar) {
-//     const calendar = new FullCalendar.Calendar(calendarEl, {
-//       plugins: [dayGridPlugin],
-//       initialView: "dayGridMonth",
-//       timeZone: "UTC",
-//       initialView: "dayGridMonth",
-//       events: "https://fullcalendar.io/api/demo-feeds/events.json",
-//       editable: true,
-//       selectable: true,
-//     });
-//     calendar.render();
-// }
-
+export default function createCalendar(calendarElement, tasks) {
+  const calendar = new calendarJs(calendarElement, {
+    manualEditingEnabled: false,
+  });
+  // const event = {
+  //   from: new Date(),
+  //   to: new Date(),
+  //   title: "A New Event",
+  //   description: "A description of the event",
+  // };
+  // calendar.addEvent(event);
+  const events = tasks.map(task => {
+    const fromDate = new Date(task.date);
+    const toDate = new Date(new Date(task.date).getTime() + 25 * 60 * 1000);
+    return {
+      from: fromDate.toUTCString(),
+      to: toDate.toUTCString(),
+      title: task.title,
+      description: task.description,
+    };
+  });
+  events.forEach(e => calendar.addEvent(e));
+}
