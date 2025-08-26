@@ -1,7 +1,8 @@
 {
   "dependencies": {
+    "@fullcalendar/core": "^6.1.19",
+    "@fullcalendar/daygrid": "^6.1.19",
     "@tailwindcss/cli": "^4.1.12",
-    "fullcalendar": "^6.1.19",
     "modern-normalize": "^3.0.1",
     "nanoid": "^5.1.5",
     "parcel": "^2.15.4",
@@ -10,9 +11,9 @@
   "name": "focusnow",
   "version": "1.0.0",
   "description": "A minimalistic pomodoro timer.",
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
   },
   "repository": {
     "type": "git",

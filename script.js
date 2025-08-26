@@ -21,6 +21,7 @@ const menuBreak = document.getElementById("menu-break");
 const menuCalendar = document.getElementById("menu-calendar");
 const playBtns = document.getElementById("play-buttons");
 const calendarEl = document.getElementById("calendar");
+const mainClock = document.getElementById("main-clock");
 
 const POMODORO_DURATION = 25 * 60;
 const BREAK_DURATION = 5 * 60;
@@ -56,10 +57,14 @@ class App {
       }
       e.target.classList.add("border-b-2");
       if (durations[e.target.id]) {
+        mainClock.classList.remove("hidden")
+        playBtns.classList.remove("hidden")
         this.#state = e.target.id === "menu-pomodoro" ? "pomodoro" : "break";
         this.#timeLeft = durations[e.target.id];
         this.resetPomodoro();
       } else {
+        mainClock.classList.add("hidden");
+        playBtns.classList.add("hidden");
         timeRemaining.textContent = "Calendar  will go here...";
       }
     });
@@ -92,6 +97,17 @@ class App {
     });
     formAddTask.addEventListener("submit", e => {
       e.preventDefault();
+      if (
+        this.getTasks().some(
+          task => task.title === formAddTaskTitleInput.value.trim()
+        )
+      ) {
+        console.log("1");
+        formAddTaskTitleInput.setCustomValidity("Please add unique task");
+        formAddTaskTitleInput.reportValidity();
+        formAddTaskTitleInput.setCustomValidity("");
+        return;
+      }
       this.createTask(
         formAddTaskTitleInput.value,
         formAddTaskDescriptionInput.value
@@ -175,11 +191,15 @@ class App {
   createTask(title, description, isChecked = false) {
     const tasks = this.getTasks();
     const id = nanoid();
+    const trimmedTitle = title.trim();
+    const trimmedDescription = description.trim();
+    const date = new Date().toISOString();
     tasks.push({
-      title,
-      description,
+      title: trimmedTitle,
+      description: trimmedDescription,
       isChecked,
       id,
+      date,
     });
     sessionStorage.setItem("tasks", JSON.stringify(tasks));
     this.createTaskHTML(id, isChecked, title, description);
