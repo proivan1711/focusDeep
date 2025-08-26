@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>focusNow</title>
+  <link rel="stylesheet" href="dist/styles.css" />
+  <script defer src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js'></script>
+  <script type="module" defer src="script.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+    integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Carattere&family=Kaushan+Script&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.svg" type="image/x-icon">
+</head>
+
+<body
+  class="flex justify-center items-center bg-[url(../mountain-background.jpg)] kaushan-script-regular bg-fixed bg-cover text-black">
+  <p class="absolute top-4 left-2 text-xl">Made with <i>love</i> by <a
+      href="https://github.com/proivan1711">proivan1711</a></p>
+  <div id="side-left"
+    class="flex flex-col justify-center items-center rounded-xl p-5 border border-black/50 absolute left-5 top-20 bg-white/5 backdrop-blur-xs">
+    <p class="text-7xl mb-8" id="time"></p>
+    <h2 class="text-5xl mb-5">Add Tasks</h2>
+    <form class="mb-5 border p-2 rounded-lg flex flex-col justify-center items-center space-y-2" id="add-task-form">
+      <button type="submit" class="fa-solid fa-plus fa-lg m-5 cursor-pointer" id="submit-task-btn"></button>
+      <input required minlength="4" type="text" class="border rounded-lg backdrop-blur-xs bg-white/15 p-0.5"
+        placeholder="Title of the task..." id="add-task-title-input">
+      <textarea class="border rounded-lg backdrop-blur-xs bg-white/15 p-1" id="add-task-description-input"
+        placeholder="Type description(optional)..."></textarea>
+    </form>
+  </div>
+  <div id="main" class="flex flex-col justify-center items-center w-xl rounded-xl p-10 mt-6">
+    <!-- m-20 -->
+    <div id="nav" class="text-2xl p-2 mb-5 backdrop-blur-sm bg-white/15 rounded-2xl focus:outline-none">
+      <button type="button" class="border-b-2 mx-3 cursor-pointer" id="menu-pomodoro">Pomodoro</button>
+      <button type="button" class="mx-3 cursor-pointer" id="menu-break">Break</button>
+      <button type="button" class="mx-3 cursor-pointer" id="menu-calendar">Calendar</button>
+    </div>
+    <div class="border-2 flex justify-center items-center circle backdrop-blur-xs bg-white/15">
+      <p id="time-remaining" class="text-9xl">25:00</p>
+    </div>
+    <!-- <button class="fa-solid fa-stop fa-2xl"></button> -->
+    <div class="flex m-4 p-2 backdrop-blur-sm bg-white/40 rounded-2xl" id="play-buttons">
+      <button>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black"
+          class="size-12 cursor-pointer" id="backward-time-btn">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M21 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061A1.125 1.125 0 0 1 21 8.689v8.122ZM11.25 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061a1.125 1.125 0 0 1 1.683.977v8.122Z" />
+        </svg>
+      </button>
+      <button>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black"
+          class="size-15 cursor-pointer" id="play-time-btn">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black"
+          class="size-15 hidden cursor-pointer" id="stop-time-btn">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M5.25 7.5A2.25 2.25 0 0 1 7.5 5.25h9a2.25 2.25 0 0 1 2.25 2.25v9a2.25 2.25 0 0 1-2.25 2.25h-9a2.25 2.25 0 0 1-2.25-2.25v-9Z" />
+        </svg>
+      </button>
+      <button>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black"
+          class="size-12 cursor-pointer" id="forward-time-btn">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z" />
+        </svg>
+      </button>
+    </div>
+    <div id="calendar"></div>
+  </div>
+  <div id="side-right"
+    class="border w-sm absolute right-10 top-20 flex justify-center items-center flex-col rounded-xl p-5 space-y-3 bg-white/5 backdrop-blur-xs border-black/50">
+    <h2 class="text-5xl mb-5">Tasks</h2>
+    <div class="border w-full rounded-lg flex justify-center items-center flex-col backdrop-blur-xs bg-white/10 task">
+    </div>
+</body>
+
+</html>

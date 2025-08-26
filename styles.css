@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+.circle {
+  border-radius: 50%;
+  width: 30rem;
+  height: 30rem;
+}
+
+.kaushan-script-regular {
+  font-family: "Kaushan Script", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.carattere-bold {
+  font-family: "Carattere", cursive;
+  font-weight: 700;
+  font-style: normal;
+}
