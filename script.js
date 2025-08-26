@@ -3,7 +3,7 @@
 import { nanoid } from "./node_modules/nanoid/nanoid.js";
 
 const navBar = document.getElementById("nav");
-const timeEl = document.getElementById("time");
+const time = document.getElementById("time");
 const formAddTaskBtn = document.getElementById("submit-task-btn");
 const formAddTask = document.getElementById("add-task-form");
 const formAddTaskTitleInput = document.getElementById("add-task-title-input");
@@ -22,8 +22,8 @@ const menuCalendar = document.getElementById("menu-calendar");
 const playBtns = document.getElementById("play-buttons");
 const calendarEl = document.getElementById("calendar");
 
-const POMODORO_DURATION = 0.15 * 60;
-const BREAK_DURATION = 0.1 * 60;
+const POMODORO_DURATION = 25 * 60;
+const BREAK_DURATION = 5 * 60;
 const SKIP_SECONDS = 5;
 
 const durations = {
@@ -114,14 +114,10 @@ class App {
     this.init();
   }
   init() {
-    // sideRight.innerHTML = `
-    // <h2 class="text-5xl mb-5">Tasks</h2>
-    // <div class="border w-full rounded-lg flex justify-center items-center flex-col backdrop-blur-xs bg-white/10 task">
-    // </div>
-    // `;
     this.getTasks().forEach(task =>
-      this.createTask(task.title, task.description, task.isChecked)
+      this.createTaskHTML(task.id, task.isChecked, task.title, task.description)
     );
+    this.displayTime(new Date());
   }
   getTasks() {
     try {
@@ -186,25 +182,32 @@ class App {
       id,
     });
     sessionStorage.setItem("tasks", JSON.stringify(tasks));
-    const div = `<div id="${id}" class="border w-full rounded-lg flex justify-center items-center flex-col backdrop-blur-xs bg-white/10 task">${checkedIcons}<h4 class="text-2xl p-2"></h4><p class="p-2"></p></div>`;
-    sideRight.insertAdjacentHTML("beforeend", div);
-    const insertedHTML = sideRight.querySelector("div:last-child");
-    if (isChecked) this.switchCheckedIcons(insertedHTML);
-    insertedHTML.querySelector("h4").textContent = title;
-    insertedHTML.querySelector("p").textContent = description;
+    this.createTaskHTML(id, isChecked, title, description);
   }
   switchCheckedIcons(target) {
     target.querySelectorAll("svg").forEach(element => {
       element.classList.toggle("hidden");
     });
   }
-  createTaskHTML(id, isChecked) {
+  createTaskHTML(id, isChecked, title, description) {
     const div = `<div id="${id}" class="border w-full rounded-lg flex justify-center items-center flex-col backdrop-blur-xs bg-white/10 task">${checkedIcons}<h4 class="text-2xl p-2"></h4><p class="p-2"></p></div>`;
     sideRight.insertAdjacentHTML("beforeend", div);
     const insertedHTML = sideRight.querySelector("div:last-child");
     if (isChecked) this.switchCheckedIcons(insertedHTML);
     insertedHTML.querySelector("h4").textContent = title;
     insertedHTML.querySelector("p").textContent = description;
+  }
+  handleTime() {
+    setTimeout(() => {
+      setInterval(() => {
+        this.displayTime(new Date());
+      }, (60 - new Date().getSeconds()) * 1000);
+    }, (60 - new Date().getSeconds()) * 1000);
+  }
+  displayTime(date) {
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    time.textContent = `${hours}:${minutes}`;
   }
 }
 
