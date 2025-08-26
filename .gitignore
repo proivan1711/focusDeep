@@ -2,3 +2,4 @@ node_modules
 .parcel-cache
 dist
 script.old.js
+.prettierrc
