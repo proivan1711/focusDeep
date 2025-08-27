@@ -1,7 +1,7 @@
 "use strict";
 
 import { nanoid } from "./node_modules/nanoid/nanoid.js";
-import createCalendar from "./calendar.js";
+import { renderCalendar, createCalendar } from "./calendar.js";
 
 const navBar = document.getElementById("nav");
 const time = document.getElementById("time");
@@ -24,7 +24,7 @@ const playBtns = document.getElementById("play-buttons");
 const calendarEl = document.getElementById("calendar");
 const mainClock = document.getElementById("main-clock");
 
-const POMODORO_DURATION = 25 * 60;
+const POMODORO_DURATION = 0.1 * 60;
 const BREAK_DURATION = 5 * 60;
 const SKIP_SECONDS = 5;
 
@@ -47,6 +47,7 @@ const checkedIcons = `<div class="checked-icons-container">
       </div>`;
 
 class App {
+  #calendar;
   #intervalID;
   #timeLeft = POMODORO_DURATION;
   #state = "pomodoro";
@@ -58,18 +59,18 @@ class App {
       }
       e.target.classList.add("border-b-2");
       if (durations[e.target.id]) {
-        calendarEl.classList.add("hidden")
+        calendarEl.classList.add("hidden");
         mainClock.classList.remove("hidden");
         playBtns.classList.remove("hidden");
         this.#state = e.target.id === "menu-pomodoro" ? "pomodoro" : "break";
         this.#timeLeft = durations[e.target.id];
         this.resetPomodoro();
       } else {
-        calendarEl.classList.remove("hidden")
+        calendarEl.classList.remove("hidden");
         document.title = "Calendar";
         mainClock.classList.add("hidden");
         playBtns.classList.add("hidden");
-        createCalendar(calendarEl, this.getTasks());
+        // console.log(calendar);
         // timeRemaining.textContent = "Calendar  will go here...";
       }
     });
@@ -107,7 +108,6 @@ class App {
           task => task.title === formAddTaskTitleInput.value.trim()
         )
       ) {
-        console.log("1");
         formAddTaskTitleInput.setCustomValidity("Please add unique task");
         formAddTaskTitleInput.reportValidity();
         formAddTaskTitleInput.setCustomValidity("");
@@ -139,26 +139,37 @@ class App {
       this.createTaskHTML(task.id, task.isChecked, task.title, task.description)
     );
     this.displayTime(new Date());
+    this.handleTime();
+    (this.#calendar = createCalendar(calendarEl)),
+      calendarEl.classList.add("hidden");
   }
-  getTasks() {
+  getTasks(isLocalStorage = false) {
+    const storage = isLocalStorage ? localStorage : sessionStorage;
+    const storageString = isLocalStorage ? "Local" : "Session";
     try {
-      const raw = sessionStorage.getItem("tasks");
+      const raw = storage.getItem("tasks");
       if (!raw) return [];
       const tasks = JSON.parse(raw);
       if (tasks && Array.isArray(tasks)) return tasks;
       else {
         console.warn(
-          "Session storage is invalid, resetting session storage..."
+          `${storageString} storage is invalid, resetting ${storageString} storage...`
         );
-        sessionStorage.setItem("tasks", "[]");
+        storage.setItem("tasks", "[]");
         return [];
       }
     } catch (e) {
-      console.error(`Error while parsing session storage: ${e}`);
-      console.warn("Overriding session storage with fresh values");
-      sessionStorage.setItem("tasks", "[]");
+      console.error(`Error while parsing ${storageString} storage: ${e}`);
+      console.warn(`Overriding ${storageString} storage with fresh values`);
+      storage.setItem("tasks", "[]");
       return [];
     }
+  }
+  saveToLocalStorageTasks() {
+    const tasksSessionStorage = this.getTasks();
+    const tasksLocalStorage = this.getTasks(true);
+    tasksLocalStorage.push(...tasksSessionStorage);
+    localStorage.setItem("tasks", JSON.stringify(tasksLocalStorage));
   }
   displayResult() {
     const timeString = `${String(Math.floor(this.#timeLeft / 60)).padStart(
@@ -192,21 +203,29 @@ class App {
     playBtn.classList.remove("hidden");
     stopBtn.classList.add("hidden");
     this.displayResult();
+    const tasks = this.getTasks();
+    this.saveToLocalStorageTasks();
+    sessionStorage.clear();
+    renderCalendar(this.#calendar, this.getTasks(true));
   }
   createTask(title, description, isChecked = false) {
-    const tasks = this.getTasks();
+    const tasksSessionStorage = this.getTasks();
+    const tasksLocalStorage = this.getTasks(true);
     const id = nanoid();
     const trimmedTitle = title.trim();
     const trimmedDescription = description.trim();
     const date = new Date().toISOString();
-    tasks.push({
+    const task = {
       title: trimmedTitle,
       description: trimmedDescription,
       isChecked,
       id,
       date,
-    });
-    sessionStorage.setItem("tasks", JSON.stringify(tasks));
+    };
+    tasksSessionStorage.push(task);
+    tasksLocalStorage.push(task);
+    sessionStorage.setItem("tasks", JSON.stringify(tasksSessionStorage));
+    localStorage.setItem("tasks", JSON.stringify(tasksLocalStorage));
     this.createTaskHTML(id, isChecked, title, description);
   }
   switchCheckedIcons(target) {
@@ -224,9 +243,12 @@ class App {
   }
   handleTime() {
     setTimeout(() => {
-      setInterval(() => {
+      const update = () => {
         this.displayTime(new Date());
-      }, (60 - new Date().getSeconds()) * 1000);
+        const msToNextMin = (60 - new Date().getSeconds()) * 1000;
+        setTimeout(update, msToNextMin);
+      };
+      update();
     }, (60 - new Date().getSeconds()) * 1000);
   }
   displayTime(date) {
