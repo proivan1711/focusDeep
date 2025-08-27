@@ -12,6 +12,7 @@ export function renderCalendar(calendar, tasks) {
       description: task.description,
     };
   });
+  console.log(calendar);
   events.forEach(e => calendar.addEvent(e));
 }
 

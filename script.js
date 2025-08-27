@@ -70,8 +70,8 @@ class App {
         document.title = "Calendar";
         mainClock.classList.add("hidden");
         playBtns.classList.add("hidden");
-        // console.log(calendar);
-        // timeRemaining.textContent = "Calendar  will go here...";
+        this.#calendar.clearEvents();
+        renderCalendar(this.#calendar, this.getTasks(true));
       }
     });
     playBtns.addEventListener("click", e => {
@@ -168,7 +168,12 @@ class App {
   saveToLocalStorageTasks() {
     const tasksSessionStorage = this.getTasks();
     const tasksLocalStorage = this.getTasks(true);
-    tasksLocalStorage.push(...tasksSessionStorage);
+    const noDuplicatesSessionStorage = tasksSessionStorage.filter(task => {
+      return !tasksLocalStorage.some(
+        taskLocalStorage => taskLocalStorage.id === task.id
+      );
+    });
+    tasksLocalStorage.push(...noDuplicatesSessionStorage);
     localStorage.setItem("tasks", JSON.stringify(tasksLocalStorage));
   }
   displayResult() {
@@ -206,11 +211,10 @@ class App {
     const tasks = this.getTasks();
     this.saveToLocalStorageTasks();
     sessionStorage.clear();
-    renderCalendar(this.#calendar, this.getTasks(true));
+    // renderCalendar(this.#calendar, this.getTasks(true));
   }
   createTask(title, description, isChecked = false) {
     const tasksSessionStorage = this.getTasks();
-    const tasksLocalStorage = this.getTasks(true);
     const id = nanoid();
     const trimmedTitle = title.trim();
     const trimmedDescription = description.trim();
@@ -223,9 +227,7 @@ class App {
       date,
     };
     tasksSessionStorage.push(task);
-    tasksLocalStorage.push(task);
     sessionStorage.setItem("tasks", JSON.stringify(tasksSessionStorage));
-    localStorage.setItem("tasks", JSON.stringify(tasksLocalStorage));
     this.createTaskHTML(id, isChecked, title, description);
   }
   switchCheckedIcons(target) {
