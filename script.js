@@ -2,6 +2,7 @@
 
 import { nanoid } from "./node_modules/nanoid/nanoid.js";
 import { renderCalendar, createCalendar } from "./calendar.js";
+import { makeTimeInput } from "./settingsInputs.js";
 
 const navBar = document.getElementById("nav");
 const time = document.getElementById("time");
@@ -10,6 +11,7 @@ const formAddTask = document.getElementById("add-task-form");
 const formAddTaskTitleInput = document.getElementById("add-task-title-input");
 const sideRight = document.getElementById("side-right");
 const timeRemaining = document.getElementById("time-remaining");
+const settings = document.getElementById("settings");
 const formAddTaskDescriptionInput = document.getElementById(
   "add-task-description-input"
 );
@@ -23,8 +25,10 @@ const menuCalendar = document.getElementById("menu-calendar");
 const playBtns = document.getElementById("play-buttons");
 const calendarEl = document.getElementById("calendar");
 const mainClock = document.getElementById("main-clock");
+const deleteTasksBtn = document.getElementById("delete-tasks-btn");
+const pomodoroDurationInput = document.getElementById("pomodoro-duration");
 
-const POMODORO_DURATION = 0.1 * 60;
+const POMODORO_DURATION = 25 * 60;
 const BREAK_DURATION = 5 * 60;
 const SKIP_SECONDS = 5;
 
@@ -59,19 +63,31 @@ class App {
       }
       e.target.classList.add("border-b-2");
       if (durations[e.target.id]) {
+        settings.classList.remove("flex");
+        settings.classList.add("hidden");
         calendarEl.classList.add("hidden");
         mainClock.classList.remove("hidden");
         playBtns.classList.remove("hidden");
         this.#state = e.target.id === "menu-pomodoro" ? "pomodoro" : "break";
         this.#timeLeft = durations[e.target.id];
         this.resetPomodoro();
-      } else {
+      } else if (e.target.id === "menu-calendar") {
+        settings.classList.remove("flex");
+        settings.classList.add("hidden");
         calendarEl.classList.remove("hidden");
         document.title = "Calendar";
         mainClock.classList.add("hidden");
         playBtns.classList.add("hidden");
         this.#calendar.clearEvents();
         renderCalendar(this.#calendar, this.getTasks(true));
+      } else {
+        settings.classList.remove("hidden");
+        settings.classList.add("flex");
+        calendarEl.classList.add("hidden");
+        document.title = "Settings";
+        mainClock.classList.add("hidden");
+        playBtns.classList.add("hidden");
+        this.handleSettings()
       }
     });
     playBtns.addEventListener("click", e => {
@@ -120,6 +136,10 @@ class App {
       formAddTaskTitleInput.value = formAddTaskDescriptionInput.value = "";
     });
     sideRight.addEventListener("click", e => {
+      if (e.target.closest("button").id === "delete-tasks-btn") {
+        this.deleteTasks();
+        return;
+      }
       const tasks = this.getTasks();
       const div = e.target.closest(".task");
 
@@ -211,7 +231,6 @@ class App {
     const tasks = this.getTasks();
     this.saveToLocalStorageTasks();
     sessionStorage.clear();
-    // renderCalendar(this.#calendar, this.getTasks(true));
   }
   createTask(title, description, isChecked = false) {
     const tasksSessionStorage = this.getTasks();
@@ -257,6 +276,28 @@ class App {
     const hours = date.getHours().toString().padStart(2, "0");
     const minutes = date.getMinutes().toString().padStart(2, "0");
     time.textContent = `${hours}:${minutes}`;
+  }
+  deleteTasks() {
+    this.saveToLocalStorageTasks();
+    sessionStorage.clear();
+    this.resetTaskHTML();
+  }
+  resetTaskHTML() {
+    sideRight.innerHTML = `
+    <h2 class="text-5xl mb-5">Tasks</h2>
+    <button class="absolute left-10 cursor-pointer top-10" title="Delete all tasks" id="delete-tasks-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+      </svg>
+    </button>
+    <div class="border w-full rounded-lg flex justify-center items-center flex-col backdrop-blur-xs bg-white/10 task">
+    </div>
+    `;
+  }
+  handleSettings() {
+    makeTimeInput(pomodoroDurationInput);
   }
 }
 

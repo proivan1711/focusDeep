@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="./node_modules/jcalendar.js/dist/calendar.js.css">
   <script defer src="./node_modules/jcalendar.js/dist/calendar.js"></script>
   <script type="module" defer src="calendar.js"></script>
+  <script type="module" defer src="settingsInputs.js"></script>
   <script type="module" defer src="script.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
     integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
@@ -42,11 +43,11 @@
       <button type="button" class="border-b-2 mx-3 cursor-pointer" id="menu-pomodoro">Pomodoro</button>
       <button type="button" class="mx-3 cursor-pointer" id="menu-break">Break</button>
       <button type="button" class="mx-3 cursor-pointer" id="menu-calendar">Calendar</button>
+      <button type="button" class="mx-3 cursor-pointer" id="menu-settings">Settings</button>
     </div>
     <div class="border-2 flex justify-center items-center circle backdrop-blur-xs bg-white/15" id="main-clock">
       <p id="time-remaining" class="text-9xl">25:00</p>
     </div>
-    <!-- <button class="fa-solid fa-stop fa-2xl"></button> -->
     <div class="flex m-4 p-2 backdrop-blur-sm bg-white/40 rounded-2xl" id="play-buttons">
       <button>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black"
@@ -76,17 +77,23 @@
       </button>
     </div>
     <div id="calendar" class="hidden"></div>
+    <div id="settings"
+      class="hidden w-xl border-xl border border-black/50 h-96 bg-white/20 backdrop-blur-md rounded-3xl flex-col">
+      <div class="timescape" id="timescape-root" id="pomodoro-duration">
+
+      </div>
+    </div>
   </div>
   <div id="side-right"
     class="border w-sm absolute right-10 top-20 flex justify-center items-center flex-col rounded-xl p-5 space-y-3 bg-white/5 backdrop-blur-xs border-black/50">
-    <!-- <button class="border absolute right-0">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-      class="size-6">
-      <path stroke-linecap="round" stroke-linejoin="round"
-        d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-    </svg>
-  </button> -->
     <h2 class="text-5xl mb-5">Tasks</h2>
+    <button class="absolute left-10 cursor-pointer top-10" title="Delete all tasks" id="delete-tasks-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+      </svg>
+    </button>
     <div class="border w-full rounded-lg flex justify-center items-center flex-col backdrop-blur-xs bg-white/10 task">
     </div>
 </body>
