@@ -8,7 +8,6 @@ const { POMODORO_DURATION, BREAK_DURATION, SKIP_SECONDS } = getUserSettings();
 
 const navBar = document.getElementById("nav");
 const time = document.getElementById("time");
-const formAddTaskBtn = document.getElementById("submit-task-btn");
 const formAddTask = document.getElementById("add-task-form");
 const formAddTaskTitleInput = document.getElementById("add-task-title-input");
 const sideRight = document.getElementById("side-right");
@@ -17,19 +16,11 @@ const settings = document.getElementById("settings");
 const formAddTaskDescriptionInput = document.getElementById(
   "add-task-description-input"
 );
-const backwardBtn = document.getElementById("backward-time-btn");
 const playBtn = document.getElementById("play-time-btn");
 const stopBtn = document.getElementById("stop-time-btn");
-const forwardBtn = document.getElementById("forward-time-btn");
-const menuPomodoro = document.getElementById("menu-pomodoro");
-const menuBreak = document.getElementById("menu-break");
-const menuCalendar = document.getElementById("menu-calendar");
 const playBtns = document.getElementById("play-buttons");
 const calendarEl = document.getElementById("calendar");
 const mainClock = document.getElementById("main-clock");
-const deleteTasksBtn = document.getElementById("delete-tasks-btn");
-const pomodoroDurationInput = document.getElementById("pomodoro-duration");
-const breakDurationInput = document.getElementById("break-duration");
 const settingsForm = document.getElementById("settings-form");
 const minutesInputPomodoro = document.getElementById("minutes-input-pomodoro");
 const hoursInputPomodoro = document.getElementById("hours-input-pomodoro");
