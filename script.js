@@ -2,7 +2,9 @@
 
 import { nanoid } from "./node_modules/nanoid/nanoid.js";
 import { renderCalendar, createCalendar } from "./calendar.js";
-import { makeTimeInput } from "./settingsInputs.js";
+import { getUserSettings } from "./config.js";
+
+const { POMODORO_DURATION, BREAK_DURATION, SKIP_SECONDS } = getUserSettings();
 
 const navBar = document.getElementById("nav");
 const time = document.getElementById("time");
@@ -27,10 +29,18 @@ const calendarEl = document.getElementById("calendar");
 const mainClock = document.getElementById("main-clock");
 const deleteTasksBtn = document.getElementById("delete-tasks-btn");
 const pomodoroDurationInput = document.getElementById("pomodoro-duration");
-
-const POMODORO_DURATION = 25 * 60;
-const BREAK_DURATION = 5 * 60;
-const SKIP_SECONDS = 5;
+const breakDurationInput = document.getElementById("break-duration");
+const settingsForm = document.getElementById("settings-form");
+const minutesInputPomodoro = document.getElementById("minutes-input-pomodoro");
+const hoursInputPomodoro = document.getElementById("hours-input-pomodoro");
+const minutesInputBreak = document.getElementById("minutes-input-break");
+const hoursInputBreak = document.getElementById("hours-input-break");
+const secondsInputSkip = document.getElementById("seconds-input-skip");
+const settingsDeleteAllHistory = document.getElementById(
+  "settings-delete-all-history"
+);
+const deleteFullHistoryPopUp = document.getElementById("delete-history-pop-up");
+const deleteFullHistoryPopUpBtns = document.getElementById("confirm-btns");
 
 const durations = {
   "menu-pomodoro": POMODORO_DURATION,
@@ -87,7 +97,6 @@ class App {
         document.title = "Settings";
         mainClock.classList.add("hidden");
         playBtns.classList.add("hidden");
-        this.handleSettings()
       }
     });
     playBtns.addEventListener("click", e => {
@@ -153,6 +162,23 @@ class App {
       console.log(targetTask);
     });
     this.init();
+    settingsDeleteAllHistory.addEventListener("click", () => {
+      deleteFullHistoryPopUp.classList.remove("hidden");
+      deleteFullHistoryPopUp.classList.add("flex");
+    });
+    deleteFullHistoryPopUpBtns.addEventListener("click", e => {
+      if (e.target.id === "confirm-btns") return;
+      if (e.target.id === "history-yes") {
+        console.log("1");
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.reload();
+      } else {
+        deleteFullHistoryPopUp.classList.remove("flex");
+        deleteFullHistoryPopUp.classList.add("hidden");
+      }
+    });
+    settingsForm.addEventListener("submit", this.handleSettingsForm.bind(this));
   }
   init() {
     this.getTasks().forEach(task =>
@@ -296,8 +322,45 @@ class App {
     </div>
     `;
   }
-  handleSettings() {
-    makeTimeInput(pomodoroDurationInput);
+  handleSettingsForm(e) {
+    e.preventDefault();
+    function calculateTotalMinutes(minutes, hours) {
+      if (minutes === "") return parseInt(hours) * 60;
+      if (hours === "") return parseInt(minutes);
+      return parseInt(minutes) + parseInt(hours) * 60;
+    }
+    const trimmedMinutesPomodoroValue = minutesInputPomodoro.value.trim();
+    const trimmedHoursPomodoroValue = hoursInputPomodoro.value.trim();
+    const trimmedMinutesBreakValue = minutesInputBreak.value.trim();
+    const trimmedHoursBreakValue = hoursInputBreak.value.trim();
+    const trimmedSecondsSkipValue = secondsInputSkip.value.trim();
+    const result = {};
+    if (
+      trimmedMinutesPomodoroValue !== "" ||
+      trimmedHoursPomodoroValue !== ""
+    ) {
+      result.POMODORO_DURATION = calculateTotalMinutes(
+        trimmedMinutesPomodoroValue,
+        trimmedHoursPomodoroValue
+      );
+    } else {
+      result.POMODORO_DURATION = POMODORO_DURATION;
+    }
+    if (trimmedMinutesBreakValue !== "" || trimmedHoursBreakValue !== "") {
+      result.BREAK_DURATION = calculateTotalMinutes(
+        trimmedMinutesBreakValue,
+        trimmedHoursBreakValue
+      );
+    } else {
+      result.BREAK_DURATION = BREAK_DURATION;
+    }
+    if (trimmedSecondsSkipValue !== "") {
+      result.SKIP_SECONDS = parseInt(trimmedHoursBreakValue);
+    } else {
+      result.SKIP_SECONDS = SKIP_SECONDS;
+    }
+    console.log(result);
+    localStorage.setItem("user-preferences", JSON.stringify(result));
   }
 }
 
