@@ -7,16 +7,12 @@ export const defaultSettings = {
   BREAK_DURATION: 5 * 60,
   SKIP_SECONDS: 5,
 };
-// const SETTINGS_MIN_POMODORO_DURATION = 20;
-// const SETTINGS_MAX_POMODORO_DURATION = 4 * 60;
 
 function getUserPreferences() {
   try {
     const raw = localStorage.getItem("user-preferences");
-    // console.log(raw);
     if (!raw) return {};
     const userPreferences = JSON.parse(raw);
-    console.log(userPreferences);
     if (
       userPreferences &&
       Object.prototype.toString.call(userPreferences) === "[object Object]"
@@ -39,7 +35,6 @@ function getUserPreferences() {
 
 export function getUserSettings() {
   const userPreferences = getUserPreferences();
-  console.log(userPreferences);
   if (JSON.stringify(userPreferences) === "{}") {
     return { POMODORO_DURATION, BREAK_DURATION, SKIP_SECONDS };
   }

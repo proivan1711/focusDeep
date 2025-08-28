@@ -42,6 +42,8 @@ const settingsDeleteAllHistory = document.getElementById(
 const deleteFullHistoryPopUp = document.getElementById("delete-history-pop-up");
 const deleteFullHistoryPopUpBtns = document.getElementById("confirm-btns");
 const resetToDefaultSettingsBtn = document.getElementById("reset-settings-btn");
+const nerdPhotoContainer = document.getElementById("nerd-photo");
+const motivationMessage = document.getElementById("motivation-message");
 
 const durations = {
   "menu-pomodoro": POMODORO_DURATION,
@@ -160,7 +162,6 @@ class App {
       this.switchCheckedIcons(svg.closest(".task"));
       targetTask.isChecked = !targetTask.isChecked;
       sessionStorage.setItem("tasks", JSON.stringify(tasks));
-      console.log(targetTask);
     });
     this.init();
     settingsDeleteAllHistory.addEventListener("click", () => {
@@ -170,8 +171,7 @@ class App {
     deleteFullHistoryPopUpBtns.addEventListener("click", e => {
       if (e.target.id === "confirm-btns") return;
       if (e.target.id === "history-yes") {
-        console.log("1");
-        localStorage.removeItem("tasks")
+        localStorage.removeItem("tasks");
         sessionStorage.clear();
         window.location.reload();
       } else {
@@ -181,7 +181,6 @@ class App {
     });
     settingsForm.addEventListener("submit", this.handleSettingsForm.bind(this));
     resetToDefaultSettingsBtn.addEventListener("click", () => {
-      console.log(defaultSettings);
       localStorage.setItem("user-preferences", JSON.stringify(defaultSettings));
       window.location.reload();
     });
@@ -195,6 +194,11 @@ class App {
     (this.#calendar = createCalendar(calendarEl)),
       calendarEl.classList.add("hidden");
     this.displayResult();
+    if (POMODORO_DURATION >= 90 * 60) {
+      nerdPhotoContainer.classList.remove("hidden");
+      motivationMessage.classList.remove("p-20");
+      motivationMessage.classList.add("absolute", "right-10", "bottom-25");
+    }
   }
   getTasks(isLocalStorage = false) {
     const storage = isLocalStorage ? localStorage : sessionStorage;
