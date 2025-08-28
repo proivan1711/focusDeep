@@ -6,10 +6,9 @@
     "modern-normalize": "^3.0.1",
     "nanoid": "^5.1.5",
     "parcel": "^2.15.4",
-    "tailwindcss": "^4.1.12",
-    "timescape": "^0.8.0"
+    "tailwindcss": "^4.1.12"
   },
-  "name": "focusnow",
+  "name": "focusdeep",
   "version": "1.0.0",
   "description": "A minimalistic pomodoro timer.",
   "scripts": {
@@ -19,12 +18,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/proivan1711/focusNow.git"
+    "url": "git+https://github.com/proivan1711/focusDeep.git"
   },
   "author": "Ivan Lukan",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/proivan1711/focusNow/issues"
+    "url": "https://github.com/proivan1711/focusDeep/issues"
   },
-  "homepage": "https://github.com/proivan1711/focusNow#readme"
+  "homepage": "https://github.com/proivan1711/focusDeep#readme"
 }
+
