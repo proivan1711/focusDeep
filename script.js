@@ -1,5 +1,10 @@
 "use strict";
 
+// In script.js
+import 'jcalendar.js/dist/calendar.js.css';
+import './styles.css';
+import './config.js';
+import './calendar.js';
 import { nanoid } from "./node_modules/nanoid/nanoid.js";
 import { renderCalendar, createCalendar } from "./calendar.js";
 import { getUserSettings, defaultSettings } from "./config.js";
