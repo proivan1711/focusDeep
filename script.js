@@ -324,10 +324,10 @@ class App {
   }
   handleSettingsForm(e) {
     e.preventDefault();
-    function calculateTotalMinutes(minutes, hours) {
-      if (minutes === "") return parseInt(hours) * 60;
-      if (hours === "") return parseInt(minutes);
-      return parseInt(minutes) + parseInt(hours) * 60;
+    function calculateTotalSeconds(minutes, hours) {
+      if (minutes === "") return parseInt(hours) * 60 * 60;
+      if (hours === "") return parseInt(minutes) * 60;
+      return parseInt(minutes) * 60 + parseInt(hours) * 60 * 60;
     }
     const trimmedMinutesPomodoroValue = minutesInputPomodoro.value.trim();
     const trimmedHoursPomodoroValue = hoursInputPomodoro.value.trim();
@@ -339,7 +339,7 @@ class App {
       trimmedMinutesPomodoroValue !== "" ||
       trimmedHoursPomodoroValue !== ""
     ) {
-      result.POMODORO_DURATION = calculateTotalMinutes(
+      result.POMODORO_DURATION = calculateTotalSeconds(
         trimmedMinutesPomodoroValue,
         trimmedHoursPomodoroValue
       );
@@ -347,7 +347,7 @@ class App {
       result.POMODORO_DURATION = POMODORO_DURATION;
     }
     if (trimmedMinutesBreakValue !== "" || trimmedHoursBreakValue !== "") {
-      result.BREAK_DURATION = calculateTotalMinutes(
+      result.BREAK_DURATION = calculateTotalSeconds(
         trimmedMinutesBreakValue,
         trimmedHoursBreakValue
       );
