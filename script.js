@@ -2,7 +2,7 @@
 
 import { nanoid } from "./node_modules/nanoid/nanoid.js";
 import { renderCalendar, createCalendar } from "./calendar.js";
-import { getUserSettings } from "./config.js";
+import { getUserSettings, defaultSettings } from "./config.js";
 
 const { POMODORO_DURATION, BREAK_DURATION, SKIP_SECONDS } = getUserSettings();
 
@@ -41,6 +41,7 @@ const settingsDeleteAllHistory = document.getElementById(
 );
 const deleteFullHistoryPopUp = document.getElementById("delete-history-pop-up");
 const deleteFullHistoryPopUpBtns = document.getElementById("confirm-btns");
+const resetToDefaultSettingsBtn = document.getElementById("reset-settings-btn");
 
 const durations = {
   "menu-pomodoro": POMODORO_DURATION,
@@ -170,7 +171,7 @@ class App {
       if (e.target.id === "confirm-btns") return;
       if (e.target.id === "history-yes") {
         console.log("1");
-        localStorage.clear();
+        localStorage.removeItem("tasks")
         sessionStorage.clear();
         window.location.reload();
       } else {
@@ -179,6 +180,11 @@ class App {
       }
     });
     settingsForm.addEventListener("submit", this.handleSettingsForm.bind(this));
+    resetToDefaultSettingsBtn.addEventListener("click", () => {
+      console.log(defaultSettings);
+      localStorage.setItem("user-preferences", JSON.stringify(defaultSettings));
+      window.location.reload();
+    });
   }
   init() {
     this.getTasks().forEach(task =>
@@ -188,6 +194,7 @@ class App {
     this.handleTime();
     (this.#calendar = createCalendar(calendarEl)),
       calendarEl.classList.add("hidden");
+    this.displayResult();
   }
   getTasks(isLocalStorage = false) {
     const storage = isLocalStorage ? localStorage : sessionStorage;
@@ -334,6 +341,12 @@ class App {
     const trimmedMinutesBreakValue = minutesInputBreak.value.trim();
     const trimmedHoursBreakValue = hoursInputBreak.value.trim();
     const trimmedSecondsSkipValue = secondsInputSkip.value.trim();
+    minutesInputPomodoro.value =
+      hoursInputPomodoro.value =
+      minutesInputBreak.value =
+      hoursInputBreak.value =
+      secondsInputSkip.value =
+        "";
     const result = {};
     if (
       trimmedMinutesPomodoroValue !== "" ||
@@ -355,12 +368,12 @@ class App {
       result.BREAK_DURATION = BREAK_DURATION;
     }
     if (trimmedSecondsSkipValue !== "") {
-      result.SKIP_SECONDS = parseInt(trimmedHoursBreakValue);
+      result.SKIP_SECONDS = parseInt(trimmedSecondsSkipValue);
     } else {
       result.SKIP_SECONDS = SKIP_SECONDS;
     }
-    console.log(result);
     localStorage.setItem("user-preferences", JSON.stringify(result));
+    window.location.reload();
   }
 }
 

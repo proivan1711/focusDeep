@@ -1,8 +1,14 @@
 const POMODORO_DURATION = 25 * 60;
 const BREAK_DURATION = 5 * 60;
 const SKIP_SECONDS = 5;
-const SETTINGS_MIN_POMODORO_DURATION = 20;
-const SETTINGS_MAX_POMODORO_DURATION = 4 * 60;
+
+export const defaultSettings = {
+  POMODORO_DURATION: 25 * 60,
+  BREAK_DURATION: 5 * 60,
+  SKIP_SECONDS: 5,
+};
+// const SETTINGS_MIN_POMODORO_DURATION = 20;
+// const SETTINGS_MAX_POMODORO_DURATION = 4 * 60;
 
 function getUserPreferences() {
   try {
