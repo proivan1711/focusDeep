@@ -5,3 +5,4 @@ dist
 script.old.js
 .prettierrc
 styles.old.css
+package-lock.json
