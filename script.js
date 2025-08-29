@@ -1,10 +1,10 @@
 "use strict";
 
 // In script.js
-import 'jcalendar.js/dist/calendar.js.css';
-import './styles.css';
-import './config.js';
-import './calendar.js';
+import "jcalendar.js/dist/calendar.js.css";
+import "./styles.css";
+import "./config.js";
+import "./calendar.js";
 import { nanoid } from "./node_modules/nanoid/nanoid.js";
 import { renderCalendar, createCalendar } from "./calendar.js";
 import { getUserSettings, defaultSettings } from "./config.js";
@@ -144,7 +144,7 @@ class App {
       formAddTaskTitleInput.value = formAddTaskDescriptionInput.value = "";
     });
     sideRight.addEventListener("click", e => {
-      if (e.target.closest("button").id === "delete-tasks-btn") {
+      if (e.target.closest("button")?.id === "delete-tasks-btn") {
         this.deleteTasks();
         return;
       }
